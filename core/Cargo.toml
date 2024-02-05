@@ -5,3 +5,6 @@ edition.workspace = true
 
 [dependencies]
 common = { path = "../common" }
+
+sqlx = { workspace = true }
+log = { workspace = true }

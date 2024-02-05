@@ -5,7 +5,7 @@ use crate::settings::database::DatabaseSettings;
 use crate::settings::web::WebApp;
 
 pub mod web;
-mod database;
+pub mod database;
 
 #[derive(Serialize, Deserialize, Clone, Default)]
 pub struct AppSettings {
