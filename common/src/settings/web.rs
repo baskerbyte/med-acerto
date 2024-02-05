@@ -19,6 +19,18 @@ pub struct WebClient {
     pub port: u16,
 }
 
+impl RestServer {
+    pub fn url(&self) -> String {
+        format!("{}:{}", self.host, self.port)
+    }
+
+    pub fn protocol_url(&self) -> String {
+        let protocol = if &self.host == "localhost" { "http" } else { "https" };
+
+        format!("{}://{}", protocol, self.url())
+    }
+}
+
 impl Default for RestServer {
     fn default() -> Self {
         Self {
@@ -28,6 +40,18 @@ impl Default for RestServer {
                 .unwrap_or("5443".to_string())
                 .parse().unwrap(),
         }
+    }
+}
+
+impl WebClient {
+    pub fn url(&self) -> String {
+        format!("{}:{}", self.host, self.port)
+    }
+
+    pub fn protocol_url(&self) -> String {
+        let protocol = if &self.host == "localhost" { "http" } else { "https" };
+
+        format!("{}://{}", protocol, self.url())
     }
 }
 
