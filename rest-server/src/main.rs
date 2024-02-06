@@ -1,3 +1,6 @@
+mod api;
+mod models;
+
 use axum::Router;
 use http::{header, Method};
 use tower_http::cors::CorsLayer;
@@ -30,6 +33,7 @@ async fn main() {
         ]);
 
     let router = Router::new()
+        .nest("/api", api::router())
         .layer(cors);
 
     log::info!("Starting axum server with tokio...");
