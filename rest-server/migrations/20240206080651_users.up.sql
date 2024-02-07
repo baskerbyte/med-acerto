@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS "payments" (
     id SERIAL PRIMARY KEY,
     user_id UUID REFERENCES "users"(id) NOT NULL,
     created_at TIMESTAMP NOT NULL,
-    status SMALLINT NOT NULL DEFAULT 0
+    method SMALLINT NOT NULL,
+    status SMALLINT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS "subscriptions" (

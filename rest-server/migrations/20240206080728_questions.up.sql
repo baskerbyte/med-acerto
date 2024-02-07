@@ -4,8 +4,8 @@ CREATE TABLE IF NOT EXISTS "questions" (
     options TEXT[] NOT NULL,
     answer_idx SMALLINT NOT NULL,
     tag SMALLINT NOT NULL,
-    year: SMALLINT NOT NULL,
-    origin: SMALLINT NOT NULL
+    year SMALLINT NOT NULL,
+    origin SMALLINT NOT NULL
 );
 
 CREATE INDEX question_tag ON questions (tag);
