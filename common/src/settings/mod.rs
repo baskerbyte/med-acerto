@@ -2,15 +2,18 @@ use std::path::Path;
 use log::{error, info};
 use serde::{Deserialize, Serialize};
 use crate::settings::database::DatabaseSettings;
+use crate::settings::secrets::Secrets;
 use crate::settings::web::WebApp;
 
 pub mod web;
 pub mod database;
+pub mod secrets;
 
 #[derive(Serialize, Deserialize, Clone, Default)]
 pub struct AppSettings {
     pub web: WebApp,
     pub database: DatabaseSettings,
+    pub secrets: Secrets,
 }
 
 impl AppSettings {
