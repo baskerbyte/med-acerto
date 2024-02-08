@@ -18,10 +18,8 @@ pub async fn question_comments(
     let comments = sqlx::query_as::<_, Comment>(
         r#"
         SELECT
-            c.user_id,
-            c.content,
-            u.username AS user_username,
-            u.avatar AS user_avatar,
+            c.user_id, c.content,
+            u.username AS user_username, u.avatar AS user_avatar,
             COUNT(l.id) AS likes,
             EXISTS(SELECT 1 FROM comment_likes l WHERE l.comment_id = c.id AND l.user_id = $1) AS liked
         FROM comments c

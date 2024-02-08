@@ -3,6 +3,15 @@ use sqlx::{Error, Row};
 use sqlx::postgres::PgRow;
 use sqlx::types::Uuid;
 
+#[derive(Serialize, sqlx::FromRow)]
+pub struct Question {
+    content: String,
+    options: Vec<String>,
+    tag: i16,
+    year: i16,
+    origin: i16
+}
+
 #[derive(Serialize)]
 pub struct Comment {
     content: String,
