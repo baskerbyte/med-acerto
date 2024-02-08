@@ -5,5 +5,5 @@ mod get;
 
 pub fn router() -> Router {
     Router::new()
-        .route("/:user_id", get(get::user_info))
+        .route("/", get(get::question_comments))
 }

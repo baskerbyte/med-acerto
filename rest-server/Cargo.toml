@@ -13,6 +13,6 @@ log = { workspace = true }
 tokio = { workspace = true }
 serde = { workspace = true }
 
-axum = { version = "0.7.4", default-features = false, features = ["tokio", "http2", "json"] }
+axum = { version = "0.7.4", default-features = false, features = ["tokio", "http2", "json", "query"] }
 tower-http = { version = "0.5.1", default-features = false, features = ["cors"] }
 http = { version = "1.0.0" }

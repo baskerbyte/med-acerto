@@ -9,9 +9,9 @@ use crate::models::user::PublicUser;
 
 pub async fn user_info(
     Extension(state): Extension<AppState>,
-    Path(id): Path<String>,
+    Path(user_id): Path<String>,
 ) -> impl IntoResponse {
-    if let Ok(id) = Uuid::parse_str(&id) {
+    if let Ok(id) = Uuid::parse_str(&user_id) {
         match sqlx::query_as::<_, PublicUser>("SELECT username FROM users WHERE id = $1")
             .bind(id)
             .fetch_optional(&state.pool)

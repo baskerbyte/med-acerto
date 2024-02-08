@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS "users" (
     name VARCHAR(64) NOT NULL,
     username CHAR(16) NOT NULL UNIQUE,
     email VARCHAR(256) NOT NULL UNIQUE,
+    avatar VARCHAR(256),
     password TEXT,
     points INT NOT NULL DEFAULT 0,
     coins INT NOT NULL DEFAULT 0,
