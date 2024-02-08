@@ -1,6 +1,9 @@
-use sqlx::types::Uuid;
+use serde::Serialize;
 
 #[derive(sqlx::FromRow)]
-pub struct User {
-    pub id: Uuid,
+pub struct ProtectedUser {}
+
+#[derive(sqlx::FromRow, Serialize)]
+pub struct PublicUser {
+    pub username: String,
 }

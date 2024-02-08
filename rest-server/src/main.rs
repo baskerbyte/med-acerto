@@ -1,11 +1,19 @@
 mod api;
 mod models;
+mod json;
 
-use axum::Router;
+use axum::{Extension, Router};
 use http::{header, Method};
+use sqlx::{Pool, Postgres};
 use tower_http::cors::CorsLayer;
 use common::settings::AppSettings;
 use app_core::database::SqlxManager;
+
+#[derive(Clone)]
+pub struct AppState {
+    pub settings: AppSettings,
+    pub pool: Pool<Postgres>
+}
 
 #[tokio::main]
 async fn main() {
@@ -34,6 +42,12 @@ async fn main() {
 
     let router = Router::new()
         .nest("/api", api::router())
+        .layer(Extension(
+            AppState {
+                settings: settings.clone(),
+                pool: database.pool
+            })
+        )
         .layer(cors);
 
     log::info!("Starting axum server with tokio...");
