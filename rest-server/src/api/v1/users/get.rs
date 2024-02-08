@@ -4,7 +4,7 @@ use axum::response::IntoResponse;
 use http::StatusCode;
 use sqlx::types::Uuid;
 use crate::AppState;
-use crate::json::error::ErrorMessage;
+use crate::json::error::json_error;
 use crate::models::user::PublicUser;
 
 pub async fn user_info(
@@ -17,38 +17,17 @@ pub async fn user_info(
             .fetch_optional(&state.pool)
             .await
         {
-            Ok(Some(user)) => {
-                Json(user).into_response()
-            }
-            Ok(None) => {
-                (
-                    StatusCode::NOT_FOUND,
-                    Json(
-                        ErrorMessage {
-                            message: "Usuário não encontrado".to_string()
-                        }
-                    )
-                ).into_response()
-            }
-            Err(_) => {
-                (
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    Json(
-                        ErrorMessage {
-                            message: "Falha ao encontrar usuário".to_string()
-                        }
-                    )
-                ).into_response()
-            }
+            Ok(Some(user)) => Json(user).into_response(),
+            Ok(None) => json_error(StatusCode::NOT_FOUND, "Usuário não encontrado")
+                .into_response(),
+            Err(_) => json_error(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Falha ao encontrar usuário"
+            )
+                .into_response()
         }
     } else {
-        (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Json(
-                ErrorMessage {
-                    message: "Falha ao reconhecer ID".to_string()
-                }
-            )
-        ).into_response()
+        json_error(StatusCode::INTERNAL_SERVER_ERROR, "Falha ao reconhecer ID")
+            .into_response()
     }
 }
