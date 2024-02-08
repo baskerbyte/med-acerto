@@ -21,7 +21,7 @@ pub async fn filter_questions(
             FROM questions
             WHERE ($1::SMALLINT[] IS NULL OR tag = ANY($1::SMALLINT[]))
               AND ($2::INTEGER IS NULL OR year = $2)
-              AND ($3::VARCHAR IS NULL OR origin = $3)
+              AND ($3::INTEGER IS NULL OR origin = $3)
             ORDER BY RANDOM()
             LIMIT $4 OFFSET $5
         "#)
