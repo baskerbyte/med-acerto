@@ -24,9 +24,15 @@ pub struct Comment {
 
 #[derive(Serialize)]
 struct UserComment {
-    pub id: String,
-    pub username: String,
-    pub avatar: Option<String>
+    id: String,
+    username: String,
+    avatar: Option<String>
+}
+
+#[derive(Serialize, sqlx::FromRow)]
+pub struct AnswerStatistic {
+    answer_idx: i16,
+    number_of_users: i64,
 }
 
 impl<'r> sqlx::FromRow<'r, PgRow> for Question {
