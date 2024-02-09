@@ -2,6 +2,7 @@ use serde::Serialize;
 use sqlx::{Error, Row};
 use sqlx::postgres::PgRow;
 use sqlx::types::Uuid;
+use common::entities::question::DifficultyLevel;
 
 #[derive(Serialize)]
 pub struct Question {
@@ -10,7 +11,7 @@ pub struct Question {
     tag: i16,
     year: i16,
     origin: i16,
-    difficulty_rating: i16
+    difficulty_rating: DifficultyLevel
 }
 
 #[derive(Serialize)]
@@ -31,11 +32,11 @@ struct UserComment {
 impl<'r> sqlx::FromRow<'r, PgRow> for Question {
     fn from_row(row: &'r PgRow) -> Result<Self, Error> {
         let difficulty_rating = match row.get::<f64, _>("difficulty_rating") {
-            rating if rating <=  1.2 => 1,
-            rating if rating <=  1.4 => 2,
-            rating if rating <=  1.6 => 3,
-            rating if rating <=  1.8 => 4,
-            _ => 5,
+            rating if rating <= 1.2 => DifficultyLevel::VeryEasy,
+            rating if rating <= 1.4 => DifficultyLevel::Easy,
+            rating if rating <= 1.6 => DifficultyLevel::Medium,
+            rating if rating <= 1.8 => DifficultyLevel::Hard,
+            _ => DifficultyLevel::VeryHard,
         };
 
         Ok(
