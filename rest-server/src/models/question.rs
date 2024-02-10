@@ -29,12 +29,6 @@ struct UserComment {
     avatar: Option<String>
 }
 
-#[derive(Serialize, sqlx::FromRow)]
-pub struct AnswerStatistic {
-    answer_idx: i16,
-    number_of_users: i64,
-}
-
 impl<'r> sqlx::FromRow<'r, PgRow> for Question {
     fn from_row(row: &'r PgRow) -> Result<Self, Error> {
         let difficulty_rating = match row.get::<f64, _>("difficulty_rating") {

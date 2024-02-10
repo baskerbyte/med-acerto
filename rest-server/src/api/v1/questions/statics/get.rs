@@ -4,7 +4,7 @@ use axum::response::IntoResponse;
 use http::StatusCode;
 use crate::AppState;
 use crate::json::error::json_error;
-use crate::models::question::AnswerStatistic;
+use crate::models::answer::AnswerStatistic;
 
 pub async fn question_statics(
     Extension(state): Extension<AppState>,

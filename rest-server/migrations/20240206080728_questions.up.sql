@@ -24,3 +24,4 @@ CREATE TABLE IF NOT EXISTS "answers" (
 
 CREATE INDEX user_answer ON "answers" (user_id);
 CREATE INDEX answer_question ON "answers" (question_id);
+CREATE INDEX correct_answer ON "answers" (correct);
