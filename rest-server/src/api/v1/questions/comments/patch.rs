@@ -40,7 +40,7 @@ pub async fn update_comment(
     if let Err(_) = sqlx::query(
         r#"
             UPDATE comments
-            SET content = $1
+            SET content = $1, was_edited = TRUE
             WHERE id = $2
         "#
     )
