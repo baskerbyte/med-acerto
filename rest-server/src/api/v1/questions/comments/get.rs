@@ -6,7 +6,7 @@ use sqlx::types::Uuid;
 use crate::AppState;
 use crate::json::error::json_error;
 use crate::json::question::Pagination;
-use crate::models::question::Comment;
+use crate::models::comment::Comment;
 
 pub async fn question_comments(
     Extension(state): Extension<AppState>,

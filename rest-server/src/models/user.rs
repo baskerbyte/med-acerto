@@ -1,12 +1,26 @@
 use serde::Serialize;
+use sqlx::{Error, Row};
+use sqlx::postgres::PgRow;
 use sqlx::types::Uuid;
 
 #[derive(sqlx::FromRow)]
 pub struct ProtectedUser {
-    id: Uuid
+    pub id: Uuid,
 }
 
-#[derive(sqlx::FromRow, Serialize)]
+#[derive(Serialize)]
 pub struct PublicUser {
-    pub username: String,
+    id: String,
+    username: String,
+}
+
+impl<'r> sqlx::FromRow<'r, PgRow> for PublicUser {
+    fn from_row(row: &'r PgRow) -> Result<Self, Error> {
+        Ok(
+            Self {
+                id: row.get::<Uuid, _>("id").to_string(),
+                username: row.get("username")
+            }
+        )
+    }
 }
