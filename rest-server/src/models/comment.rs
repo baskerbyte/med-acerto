@@ -1,14 +1,15 @@
 use serde::Serialize;
 use sqlx::{Error, Row};
 use sqlx::postgres::PgRow;
-use sqlx::types::Uuid;
 
 #[derive(Serialize)]
 pub struct Comment {
     content: String,
     user: UserComment,
     likes: i64,
-    liked: bool
+    liked: bool,
+    created_at: i64,
+    was_edited: bool
 }
 
 #[derive(Serialize)]
@@ -24,13 +25,14 @@ impl<'r> sqlx::FromRow<'r, PgRow> for Comment {
             Self {
                 content: row.get("content"),
                 user: UserComment {
-                    // Uuid is not serializable
-                    id: row.get::<Uuid, _>("user_id").to_string(),
+                    id: row.get("user_id"),
                     username: row.get("user_username"),
                     avatar: row.get("user_avatar")
                 },
                 likes: row.get("likes"),
-                liked: row.get("liked")
+                liked: row.get("liked"),
+                created_at: row.get("created_at"),
+                was_edited: row.get("was_edited"),
             }
         )
     }

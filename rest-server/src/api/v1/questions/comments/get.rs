@@ -3,7 +3,6 @@ use axum::extract::{Path, Query};
 use axum::response::IntoResponse;
 use axum_garde::WithValidation;
 use http::StatusCode;
-use sqlx::types::Uuid;
 use crate::AppState;
 use crate::json::error::json_error;
 use crate::json::question::Pagination;
@@ -20,6 +19,7 @@ pub async fn question_comments(
         r#"
         SELECT
             c.user_id, c.content,
+            c.created_at, c.was_edited,
             u.username AS user_username, u.avatar AS user_avatar,
             COUNT(l.id) AS likes,
             EXISTS(SELECT 1 FROM comment_likes l WHERE l.comment_id = c.id AND l.user_id = $1) AS liked
@@ -33,7 +33,7 @@ pub async fn question_comments(
         "#
     )
         // TODO: get authorized user
-        .bind(Uuid::parse_str("fb8e08de-6d66-445a-ab2b-f3f40aabfa2e").unwrap())
+        .bind(1)
         .bind(question_id)
         .bind(pagination.per_page)
         .bind(offset)

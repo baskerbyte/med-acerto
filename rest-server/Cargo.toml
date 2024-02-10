@@ -7,7 +7,7 @@ edition.workspace = true
 common = { path = "../common" }
 app-core = { path = "../core" }
 
-sqlx = { workspace = true, features = ["migrate", "uuid", "macros"] }
+sqlx = { workspace = true, features = ["migrate", "macros"] }
 env_logger = { workspace = true }
 log = { workspace = true }
 tokio = { workspace = true }

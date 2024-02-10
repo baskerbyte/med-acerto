@@ -16,7 +16,7 @@ CREATE INDEX question_difficulty ON questions (difficulty_rating);
 
 CREATE TABLE IF NOT EXISTS "answers" (
     id SERIAL PRIMARY KEY,
-    user_id UUID REFERENCES users(id) NOT NULL,
+    user_id INT REFERENCES users(id) NOT NULL,
     question_id INT REFERENCES questions(id) NOT NULL,
     correct BOOLEAN NOT NULL,
     answer_idx SMALLINT NOT NULL

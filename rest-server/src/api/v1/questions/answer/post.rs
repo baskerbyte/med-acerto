@@ -3,7 +3,6 @@ use axum::extract::Path;
 use axum::response::IntoResponse;
 use axum_garde::WithValidation;
 use http::StatusCode;
-use sqlx::types::Uuid;
 use crate::AppState;
 use crate::json::answer::{AnswerPayload, AnswerResponse};
 use crate::json::error::json_error;
@@ -37,7 +36,7 @@ pub async fn answer_question(
            VALUES ($1, $2, $3, $4)
     "#)
         // TODO: get authorized user
-        .bind(Uuid::parse_str("fb8e08de-6d66-445a-ab2b-f3f40aabfa2e").unwrap())
+        .bind(1)
         .bind(question_id)
         .bind(correct)
         .bind(payload.answer_idx)

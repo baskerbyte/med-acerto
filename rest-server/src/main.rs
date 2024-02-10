@@ -23,8 +23,8 @@ async fn main() {
     let database = SqlxManager::new(&settings.database)
         .await;
 
-    //sqlx::migrate!().run(&database.pool).await
-    //    .expect("Failed to register tables");
+    sqlx::migrate!().run(&database.pool).await
+        .expect("Failed to register tables");
 
     let cors = CorsLayer::new()
         .allow_credentials(true)
