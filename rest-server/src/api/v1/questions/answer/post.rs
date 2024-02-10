@@ -1,6 +1,7 @@
 use axum::{Extension, Json};
 use axum::extract::Path;
 use axum::response::IntoResponse;
+use axum_garde::WithValidation;
 use http::StatusCode;
 use sqlx::types::Uuid;
 use crate::AppState;
@@ -11,7 +12,7 @@ use crate::models::answer::AnswerStats;
 pub async fn answer_question(
     Extension(state): Extension<AppState>,
     Path(question_id): Path<i32>,
-    Json(payload): Json<AnswerPayload>
+    WithValidation(payload): WithValidation<Json<AnswerPayload>>
 ) -> impl IntoResponse {
     let mut tx = state.pool.begin().await.unwrap();
 

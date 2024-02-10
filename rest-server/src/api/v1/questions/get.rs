@@ -1,6 +1,7 @@
 use axum::{Extension, Json};
 use axum::extract::Query;
 use axum::response::IntoResponse;
+use axum_garde::WithValidation;
 use http::StatusCode;
 use sqlx::types::Uuid;
 use crate::AppState;
@@ -10,9 +11,9 @@ use crate::models::question::Question;
 
 pub async fn filter_questions(
     Extension(state): Extension<AppState>,
-    Query(filter): Query<QuestionFilter>,
+    WithValidation(filter): WithValidation<Query<QuestionFilter>>,
 ) -> impl IntoResponse {
-    let offset = (filter.page -  1) * filter.per_page;
+    let offset = (filter.pagination.page -  1) * filter.pagination.per_page;
 
     // TODO: Add support to filter by difficulty
     let questions = sqlx::query_as::<_, Question>(r#"
@@ -27,10 +28,10 @@ pub async fn filter_questions(
             ORDER BY RANDOM()
             LIMIT $4 OFFSET $5
         "#)
-        .bind(filter.tags)
+        .bind(&filter.tags)
         .bind(filter.year)
         .bind(filter.origin)
-        .bind(filter.per_page)
+        .bind(filter.pagination.per_page)
         .bind(offset)
         // TODO: get authorized user
         .bind(Uuid::parse_str("fb8e08de-6d66-445a-ab2b-f3f40aabfa2e").unwrap())

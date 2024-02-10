@@ -14,5 +14,7 @@ tokio = { workspace = true }
 serde = { workspace = true }
 
 axum = { version = "0.7.4", default-features = false, features = ["tokio", "http2", "json", "query"] }
+axum_garde = { version = "0.18.0", default-features = false, features = ["json", "query"] }
 tower-http = { version = "0.5.1", default-features = false, features = ["cors"] }
+garde = { version = "0.18.0", default-features = false, features = ["derive"] }
 http = { version = "1.0.0" }

@@ -1,6 +1,7 @@
 use axum::{Extension, Json};
 use axum::extract::{Path, Query};
 use axum::response::IntoResponse;
+use axum_garde::WithValidation;
 use http::StatusCode;
 use sqlx::types::Uuid;
 use crate::AppState;
@@ -11,7 +12,7 @@ use crate::models::comment::Comment;
 pub async fn question_comments(
     Extension(state): Extension<AppState>,
     Path(question_id): Path<i32>,
-    Query(pagination): Query<Pagination>,
+    WithValidation(pagination): WithValidation<Query<Pagination>>,
 ) -> impl IntoResponse {
     let offset = (pagination.page -  1) * pagination.per_page;
 
