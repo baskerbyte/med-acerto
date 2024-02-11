@@ -2,8 +2,8 @@ use axum::Extension;
 use axum::extract::Path;
 use axum::response::IntoResponse;
 use http::StatusCode;
-use crate::AppState;
 use crate::json::error::json_error;
+use crate::web::AppState;
 
 pub async fn delete_comment(
     Extension(state): Extension<AppState>,

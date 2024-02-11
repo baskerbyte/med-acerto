@@ -2,9 +2,9 @@ use axum::{Extension, Json};
 use axum::extract::Path;
 use axum::response::IntoResponse;
 use http::StatusCode;
-use crate::AppState;
 use crate::json::error::json_error;
 use crate::models::answer::AnswerStatistic;
+use crate::web::AppState;
 
 pub async fn question_statics(
     Extension(state): Extension<AppState>,

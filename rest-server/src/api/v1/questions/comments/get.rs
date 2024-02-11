@@ -3,10 +3,10 @@ use axum::extract::{Path, Query};
 use axum::response::IntoResponse;
 use axum_garde::WithValidation;
 use http::StatusCode;
-use crate::AppState;
 use crate::json::error::json_error;
 use crate::json::question::Pagination;
 use crate::models::comment::Comment;
+use crate::web::AppState;
 
 pub async fn question_comments(
     Extension(state): Extension<AppState>,

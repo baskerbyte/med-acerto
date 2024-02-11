@@ -3,9 +3,9 @@ use axum::extract::Path;
 use axum::response::IntoResponse;
 use axum_garde::WithValidation;
 use http::StatusCode;
-use crate::AppState;
 use crate::json::comment::UpdateCommentPayload;
 use crate::json::error::json_error;
+use crate::web::AppState;
 
 pub async fn update_comment(
     Extension(state): Extension<AppState>,

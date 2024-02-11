@@ -2,9 +2,9 @@ use axum::{Extension, Json};
 use axum::extract::Path;
 use axum::response::IntoResponse;
 use http::StatusCode;
-use crate::AppState;
 use crate::json::error::json_error;
 use crate::models::user::PublicUser;
+use crate::web::AppState;
 
 pub async fn user_info(
     Extension(state): Extension<AppState>,
