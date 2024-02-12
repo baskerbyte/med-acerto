@@ -9,13 +9,13 @@ pub async fn delete_comment(
     Extension(state): Extension<AppState>,
     Path(comment_id): Path<i32>,
 ) -> impl IntoResponse {
-    let author: (i32,) = match sqlx::query_as(
+    let author: i32 = match sqlx::query_scalar!(
         r#"
             SELECT user_id FROM comments
-            WHERE id = $
-        "#
+            WHERE id = $1;
+        "#,
+        comment_id
     )
-        .bind(comment_id)
         .fetch_one(&state.pool)
         .await {
         Ok(result) => result,
@@ -26,7 +26,7 @@ pub async fn delete_comment(
     };
 
     // TODO: get authorized user
-    if author.0 != 1 {
+    if author != 1 {
         return json_error(
             StatusCode::UNAUTHORIZED,
             "Somente o autor ou moderador podem apagar o comentário"

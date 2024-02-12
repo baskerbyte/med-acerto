@@ -8,10 +8,13 @@ use crate::web::AppState;
 
 pub async fn user_info(
     Extension(state): Extension<AppState>,
-    Path(user_id): Path<i64>,
+    Path(user_id): Path<i32>,
 ) -> impl IntoResponse {
-    match sqlx::query_as::<_, PublicUser>("SELECT username FROM users WHERE id = $1")
-        .bind(user_id)
+    match sqlx::query_as!(
+        PublicUser,
+        "SELECT id, username FROM users WHERE id = $1",
+        user_id
+    )
         .fetch_optional(&state.pool)
         .await
     {

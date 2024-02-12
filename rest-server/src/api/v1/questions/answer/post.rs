@@ -15,12 +15,12 @@ pub async fn answer_question(
 ) -> impl IntoResponse {
     let mut tx = state.pool.begin().await.unwrap();
 
-    let row: (i16,) = match sqlx::query_as(
+    let row = match sqlx::query_scalar!(
         r#"
             SELECT answer_idx FROM questions WHERE id = $1
-        "#
+        "#,
+        question_id
     )
-        .bind(question_id)
         .fetch_one(&mut *tx)
         .await {
         Ok(result) => result,
@@ -30,16 +30,18 @@ pub async fn answer_question(
         }
     };
 
-    let correct = payload.answer_idx == row.0;
-    if let Err(_) = sqlx::query(r#"
+    let correct = payload.answer_idx == row;
+    if let Err(_) = sqlx::query!(
+        r#"
            INSERT INTO answers (user_id, question_id, correct, answer_idx)
            VALUES ($1, $2, $3, $4)
-    "#)
+        "#,
         // TODO: get authorized user
-        .bind(1)
-        .bind(question_id)
-        .bind(correct)
-        .bind(payload.answer_idx)
+        1,
+        question_id,
+        correct,
+        payload.answer_idx
+    )
         .execute(&mut *tx)
         .await {
         return json_error(StatusCode::INTERNAL_SERVER_ERROR, "Erro ao inserir resposta")
@@ -48,15 +50,16 @@ pub async fn answer_question(
 
     match tx.commit().await {
         Ok(_) => {
-            let stats = sqlx::query_as::<_, AnswerStats>(
+            let stats = sqlx::query_as!(
+                AnswerStats,
                 r#"
-                    SELECT COUNT(*) AS total_users,
+                    SELECT COUNT(*) AS total_answers,
                     COUNT(CASE WHEN correct THEN 1 END) AS total_correct_answers
                     FROM answers
                     WHERE question_id = $1;
-                "#
+                "#,
+                question_id
             )
-                .bind(question_id)
                 .fetch_one(&state.pool)
                 .await;
 

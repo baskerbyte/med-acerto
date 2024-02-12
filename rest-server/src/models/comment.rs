@@ -1,39 +1,30 @@
-use serde::Serialize;
-use sqlx::{Error, Row};
-use sqlx::postgres::PgRow;
+use serde_json::json;
+use sqlx::types::chrono::NaiveDateTime;
 
-#[derive(Serialize)]
 pub struct Comment {
-    content: String,
-    user: UserComment,
-    likes: i64,
-    liked: bool,
-    created_at: i64,
-    was_edited: bool
+    pub content: String,
+    pub likes: Option<i64>,
+    pub liked: Option<bool>,
+    pub created_at: NaiveDateTime,
+    pub was_edited: bool,
+    pub user_id: i32,
+    pub user_username: String,
+    pub user_avatar: Option<String>
 }
 
-#[derive(Serialize)]
-struct UserComment {
-    id: String,
-    username: String,
-    avatar: Option<String>
-}
-
-impl<'r> sqlx::FromRow<'r, PgRow> for Comment {
-    fn from_row(row: &'r PgRow) -> Result<Self, Error> {
-        Ok(
-            Self {
-                content: row.get("content"),
-                user: UserComment {
-                    id: row.get("user_id"),
-                    username: row.get("user_username"),
-                    avatar: row.get("user_avatar")
-                },
-                likes: row.get("likes"),
-                liked: row.get("liked"),
-                created_at: row.get("created_at"),
-                was_edited: row.get("was_edited"),
+impl Comment {
+    pub fn into_json(&self) -> serde_json::Value {
+        json!({
+            "content": self.content,
+            "likes": self.likes,
+            "liked": self.liked,
+            "created_at": self.created_at.timestamp(),
+            "was_edited": self.was_edited,
+            "user": {
+                "id": self.user_id,
+                "username": self.user_username,
+                "avatar": self.user_avatar,
             }
-        )
+        })
     }
 }

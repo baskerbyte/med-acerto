@@ -1,12 +1,12 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(sqlx::FromRow)]
+#[derive(Deserialize)]
 pub struct ProtectedUser {
-    pub id: i64,
+    pub id: i32,
 }
 
-#[derive(Serialize, sqlx::FromRow)]
+#[derive(Serialize)]
 pub struct PublicUser {
-    id: i64,
-    username: String,
+    pub id: i32,
+    pub username: String,
 }

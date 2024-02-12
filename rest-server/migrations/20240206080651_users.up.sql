@@ -17,7 +17,7 @@ CREATE INDEX user_username ON "users" (username);
 CREATE TABLE IF NOT EXISTS "payments" (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES "users"(id) NOT NULL,
-    created_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     method SMALLINT NOT NULL,
     status SMALLINT NOT NULL
 );

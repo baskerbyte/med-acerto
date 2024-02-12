@@ -1,4 +1,3 @@
-use std::sync::Arc;
 use axum::{Extension, Router};
 use http::{header, Method};
 use sqlx::{Pool, Postgres};
@@ -36,11 +35,11 @@ impl App {
         }
     }
 
-    fn router(self) -> Router {
+    pub fn router(state: AppState) -> Router {
         let cors = CorsLayer::new()
             .allow_credentials(true)
             .allow_origin([
-                self.state.settings.web.client.protocol_url().parse()
+                state.settings.web.client.protocol_url().parse()
                     .unwrap()
             ])
             .allow_headers([
@@ -53,7 +52,7 @@ impl App {
 
         Router::new()
             .nest("/api", api::router())
-            .layer(Extension(self.state))
+            .layer(Extension(state))
             .layer(cors)
     }
 
@@ -62,8 +61,31 @@ impl App {
         let listener = tokio::net::TcpListener::bind(self.state.settings.web.rest.url())
             .await
             .unwrap();
-        axum::serve(listener, self.router())
+        axum::serve(listener, Self::router(self.state))
             .await
             .expect("Failed to start axum server");
+    }
+}
+
+#[cfg(test)]
+pub mod test {
+    use axum_test::{TestServer, TestServerConfig};
+    use sqlx::{Pool, Postgres};
+    use crate::web::{App, AppState};
+
+    pub fn test_app(pool: Pool<Postgres>) -> TestServer {
+        let config = TestServerConfig::builder()
+            .save_cookies()
+            .expect_success_by_default()
+            .mock_transport()
+            .build();
+
+        TestServer::new_with_config(
+            App::router(AppState {
+                settings: Default::default(), pool
+            }),
+            config
+        )
+            .unwrap()
     }
 }

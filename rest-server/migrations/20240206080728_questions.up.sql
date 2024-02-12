@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS "answers" (
     user_id INT REFERENCES users(id) NOT NULL,
     question_id INT REFERENCES questions(id) NOT NULL,
     correct BOOLEAN NOT NULL,
-    answer_idx SMALLINT NOT NULL
+    answer_idx SMALLINT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX user_answer ON "answers" (user_id);

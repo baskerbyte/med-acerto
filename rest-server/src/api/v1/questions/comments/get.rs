@@ -15,7 +15,8 @@ pub async fn question_comments(
 ) -> impl IntoResponse {
     let offset = (pagination.page -  1) * pagination.per_page;
 
-    let comments = sqlx::query_as::<_, Comment>(
+    let comments = sqlx::query_as!(
+        Comment,
         r#"
         SELECT
             c.user_id, c.content,
@@ -30,18 +31,22 @@ pub async fn question_comments(
         GROUP BY c.id, u.username, u.avatar
         ORDER BY COUNT(l.id) DESC
         LIMIT $3 OFFSET $4;
-        "#
-    )
+        "#,
         // TODO: get authorized user
-        .bind(1)
-        .bind(question_id)
-        .bind(pagination.per_page)
-        .bind(offset)
+        1,
+        question_id,
+        pagination.per_page,
+        offset
+    )
         .fetch_all(&state.pool)
         .await;
 
     if let Ok(comments) = comments {
-        Json(comments).into_response()
+        let json_values: Vec<serde_json::Value> = comments.iter()
+            .map(|it| it.into_json())
+            .collect();
+
+        Json(json_values).into_response()
     } else {
         json_error(StatusCode::INTERNAL_SERVER_ERROR, "Falha ao buscar comentários")
             .into_response()

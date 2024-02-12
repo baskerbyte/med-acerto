@@ -10,13 +10,16 @@ pub async fn question_statics(
     Extension(state): Extension<AppState>,
     Path(question_id): Path<i32>
 ) -> impl IntoResponse {
-    let stats = sqlx::query_as::<_, AnswerStatistic>(r#"
+    let stats = sqlx::query_as!(
+        AnswerStatistic,
+        r#"
             SELECT answer_idx, COUNT(user_id) AS number_of_users
             FROM answers
             WHERE question_id = $1
-            GROUP BY answer_idx
-        "#)
-        .bind(question_id)
+            GROUP BY answer_idx;
+        "#,
+        question_id
+    )
         .fetch_all(&state.pool)
         .await;
 

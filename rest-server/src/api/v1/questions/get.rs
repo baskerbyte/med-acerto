@@ -15,7 +15,9 @@ pub async fn filter_questions(
     let offset = (filter.pagination.page -  1) * filter.pagination.per_page;
 
     // TODO: Add support to filter by difficulty
-    let questions = sqlx::query_as::<_, Question>(r#"
+    let questions = sqlx::query_as!(
+        Question,
+        r#"
             SELECT
                 q.content, q.options, q.tag,
                 q.year, q.origin, q.difficulty_rating
@@ -26,14 +28,15 @@ pub async fn filter_questions(
               AND ($3::INTEGER IS NULL OR q.origin = $3)
             ORDER BY RANDOM()
             LIMIT $4 OFFSET $5
-        "#)
-        .bind(&filter.tags)
-        .bind(filter.year)
-        .bind(filter.origin)
-        .bind(filter.pagination.per_page)
-        .bind(offset)
+        "#,
+        filter.tags.as_ref().map(|vec| vec.as_slice()).unwrap_or(&[]),
+        filter.year,
+        filter.origin,
+        filter.pagination.per_page,
+        offset,
         // TODO: get authorized user
-        .bind(1)
+        1
+    )
         .fetch_all(&state.pool)
         .await;
 

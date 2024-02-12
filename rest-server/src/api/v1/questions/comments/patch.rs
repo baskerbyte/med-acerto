@@ -12,13 +12,13 @@ pub async fn update_comment(
     Path(comment_id): Path<i32>,
     WithValidation(payload): WithValidation<Json<UpdateCommentPayload>>
 ) -> impl IntoResponse {
-    let author: (i32,) = match sqlx::query_as(
+    let author = match sqlx::query_scalar!(
         r#"
             SELECT user_id FROM comments
-            WHERE id = $
-        "#
+            WHERE id = $1;
+        "#,
+        comment_id
     )
-        .bind(comment_id)
         .fetch_one(&state.pool)
         .await {
         Ok(result) => result,
@@ -29,7 +29,7 @@ pub async fn update_comment(
     };
 
     // TODO: get authorized user
-    if author.0 != 1 {
+    if author != 1 {
         return json_error(
             StatusCode::UNAUTHORIZED,
             "Somente o autor pode editar o comentário"
@@ -37,15 +37,15 @@ pub async fn update_comment(
             .into_response();
     }
 
-    if let Err(_) = sqlx::query(
+    if let Err(_) = sqlx::query!(
         r#"
             UPDATE comments
             SET content = $1, was_edited = TRUE
-            WHERE id = $2
-        "#
+            WHERE id = $2;
+        "#,
+        &payload.content,
+        comment_id
     )
-        .bind(&payload.content)
-        .bind(comment_id)
         .execute(&state.pool)
         .await {
         json_error(StatusCode::INTERNAL_SERVER_ERROR, "Falha ao atualizar comentário")

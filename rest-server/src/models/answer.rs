@@ -1,13 +1,13 @@
 use serde::Serialize;
 
-#[derive(Serialize, sqlx::FromRow)]
+#[derive(Serialize)]
 pub struct AnswerStatistic {
-    answer_idx: i16,
-    number_of_users: i64,
+    pub answer_idx: i16,
+    pub number_of_users: Option<i64>,
 }
 
-#[derive(Serialize, sqlx::FromRow)]
+#[derive(Serialize)]
 pub struct AnswerStats {
-    total_answers: i32,
-    total_correct_answers: i32
+    pub total_answers: Option<i64>,
+    pub total_correct_answers: Option<i64>
 }

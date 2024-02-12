@@ -12,16 +12,16 @@ pub async fn create_comment(
     Path(question_id): Path<i32>,
     WithValidation(payload): WithValidation<Json<CreateCommentPayload>>
 ) -> impl IntoResponse {
-    let query = sqlx::query(
+    let query = sqlx::query!(
         r#"
             INSERT INTO comments (user_id, question_id, content)
-            VALUES ($1, $2, $3)
-        "#
-    )
+            VALUES ($1, $2, $3);
+        "#,
         // TODO: get authorized user
-        .bind(1)
-        .bind(question_id)
-        .bind(&payload.content)
+        1,
+        question_id,
+        &payload.content
+    )
         .execute(&state.pool)
         .await;
 

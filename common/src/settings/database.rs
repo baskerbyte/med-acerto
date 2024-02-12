@@ -13,7 +13,7 @@ pub struct DatabaseSettings {
 impl DatabaseSettings {
     pub fn url(&self) -> String {
         format!(
-            "postgres://{}:{}@{}:{}/{}",
+            "postgresql://{}:{}@{}:{}/{}",
             self.username, self.password, self.host, self.port, self.database
         )
     }

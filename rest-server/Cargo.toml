@@ -7,7 +7,7 @@ edition.workspace = true
 common = { path = "../common" }
 app-core = { path = "../core" }
 
-sqlx = { workspace = true, features = ["migrate", "macros"] }
+sqlx = { workspace = true, features = ["migrate", "macros", "chrono"] }
 env_logger = { workspace = true }
 log = { workspace = true }
 tokio = { workspace = true }
@@ -17,4 +17,8 @@ axum = { version = "0.7.4", default-features = false, features = ["tokio", "http
 axum_garde = { version = "0.18.0", default-features = false, features = ["json", "query"] }
 tower-http = { version = "0.5.1", default-features = false, features = ["cors"] }
 garde = { version = "0.18.0", default-features = false, features = ["derive"] }
+serde_json = { version = "1.0.113", default-features = false, features = ["std"] }
 http = { version = "1.0.0" }
+
+[dev-dependencies]
+axum-test = { version = "14.3.0", default-features = false, features = ["pretty-assertions"] }
